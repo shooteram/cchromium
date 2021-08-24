@@ -11,6 +11,25 @@ The supported customizations are:
 
 All of these Chromium-specific flags are customizable by editing a yaml configuration file.
 
+#### Example of configuration
+```yaml
+--- 
+chromium: 
+  path: "C:\\Program Files\\Chromium\\Application\\chrome.exe"
+  settings: 
+    disable_features: 
+      - UserAgentClientHint
+    host_resolver_rules: "MAP * ~NOTFOUND , EXCLUDE ::1"
+    proxy: "socks5://proxy.net:9000"
+    proxy_bypass: 
+      - "127.0.0.1:*"
+    user_agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.130 Safari/537.36"
+```
+This configuration will generate a shortcut with the following target
+```
+"C:\Program Files\Chromium\Application\chrome.exe" --proxy-server="socks5://proxy.net:9000" --proxy-bypass-list="127.0.0.1:*" --host-resolver-rules="MAP * ~NOTFOUND , EXCLUDE ::1" --user-agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.130 Safari/537.36" --disable-features="UserAgentClientHint"
+```
+
 #### Build
 ```shell
 go build
