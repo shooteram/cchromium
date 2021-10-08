@@ -155,3 +155,11 @@ func (o *Options) createShortcut() {
 	fmt.Println("Now you can, for example, use this shortcut to pin it to the taskbar or to the start menu")
 	os.Exit(0)
 }
+
+func launchChromium() {
+	cmd := exec.Command("powershell.exe", "start", fmt.Sprintf(`"%s"`, shortcutPath))
+	err := cmd.Run()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
