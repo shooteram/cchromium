@@ -42,6 +42,8 @@ type Options struct {
 			HostResolverRules string   `yaml:"host_resolver_rules"`
 			UserAgent         string   `yaml:"user_agent"`
 			DisableFeatures   []string `yaml:"disable_features"`
+			UserDataDirectory string   `yaml:"user_data_dir"`
+			Args              string   `yaml:"args"`
 		} `yaml:"settings"`
 	} `yaml:"chromium"`
 }
@@ -120,6 +122,9 @@ func (o *Options) createShortcut() {
 	}
 
 	args := []string{}
+	if o.Chromium.Settings.UserDataDirectory != "" {
+		args = append(args, fmt.Sprintf("--user-data-dir=`\"%s`\"", o.Chromium.Settings.UserDataDirectory))
+	}
 	if o.Chromium.Settings.Proxy != "" {
 		args = append(args, fmt.Sprintf("--proxy-server=`\"%s`\"", o.Chromium.Settings.Proxy))
 	}
@@ -134,6 +139,9 @@ func (o *Options) createShortcut() {
 	}
 	if len(o.Chromium.Settings.DisableFeatures) > 0 {
 		args = append(args, fmt.Sprintf("--disable-features=`\"%s`\"", strings.Join(o.Chromium.Settings.DisableFeatures, ",")))
+	}
+	if o.Chromium.Settings.Args != "" {
+		args = append(args, o.Chromium.Settings.Args)
 	}
 
 	powershellCommand := fmt.Sprintf(
