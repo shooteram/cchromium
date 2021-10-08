@@ -4,6 +4,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"os"
@@ -31,6 +32,9 @@ chromium:
 	configPath   string
 	shortcutDir  string
 	shortcutPath string
+
+	create bool
+	launch bool
 )
 
 type Options struct {
@@ -49,6 +53,10 @@ type Options struct {
 }
 
 func main() {
+	flag.BoolVar(&create, "create", false, "create the shortcut to chromium")
+	flag.BoolVar(&launch, "launch", false, "launch chromium")
+	flag.Parse()
+
 	if runtime.GOOS != "windows" {
 		log.Fatalf("%s is not supported by this software", runtime.GOOS)
 	}
@@ -63,7 +71,17 @@ func main() {
 	shortcutPath = filepath.Join(shortcutDir, "Chromium.lnk")
 
 	chromium := loadConfiguration()
-	chromium.createShortcut()
+	if create {
+		chromium.createShortcut()
+		return
+	}
+
+	if launch {
+		launchChromium()
+		return
+	}
+
+	flag.PrintDefaults()
 }
 
 func loadConfiguration() *Options {
